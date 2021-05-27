@@ -41,9 +41,13 @@ function tweetEvent(tweet) {
 
   console.log(isValid);
 
+  // Convert to DD-MM-YY Format.
+  let date = convert(tweet.created_at);
+  console.log(date);
+
   if (reply_to === "YourSlots" && isValid) {
     // Get data from SETU API & send that as tweet.
-    const api_url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${pinCode}&date=28-05-2021`;
+    const api_url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${pinCode}&date=${date}`;
 
     fetch(api_url, {
       headers: { "User-Agent": "Mozilla/5.0" },
@@ -107,4 +111,12 @@ function validatePinCode(pinCode) {
 
   let isValid = regex.test(pinCode);
   return isValid;
+}
+
+// Function for converting to DD-MM-YY Format.
+function convert(str) {
+  var date = new Date(str),
+    mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+    day = ("0" + date.getDate()).slice(-2);
+  return [day, mnth, date.getFullYear()].join("-");
 }
