@@ -8,7 +8,7 @@ const config = require("./config");
 const T = new Twit(config);
 
 // Setting up a user stream
-const stream = T.stream("statuses/filter", { track: "@rainaarteev" });
+const stream = T.stream("statuses/filter", { track: "@YourSlots" });
 
 // Listening to Stream.
 stream.on("tweet", tweetEvent);
@@ -39,13 +39,13 @@ function tweetEvent(tweet) {
   // Id for replying in thread.
   let id = tweet.id_str;
 
-  if (reply_to === "RainaArteev" && isValid) {
+  if (reply_to === "YourSlots" && isValid) {
     // Get data from SETU API & send that as tweet.
     var newTweet = "@" + from + " thankyou for tweeting me!";
 
     // Post Tweet.
     postTweet(newTweet, id);
-  } else if (reply_to === "RainaArteev" && !isValid) {
+  } else if (reply_to === "YourSlots" && !isValid) {
     var newTweet = "@" + from + " Your pincode looks invalid!";
 
     // Post Tweet.
@@ -64,13 +64,13 @@ function postTweet(txt, id) {
   T.post("statuses/update", tweet, tweeted);
 
   // Function to make sure tweet was sent.
-  const tweeted = (err, reply) => {
+  function tweeted(err, reply) {
     if (err) {
       console.log(err);
     } else {
       console.log("Tweeted " + reply.text);
     }
-  };
+  }
 }
 
 // Function for validating pin code.
