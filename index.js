@@ -1,14 +1,19 @@
 // Package Imports.
 const Twit = require("twit");
-
+const fetch = require("node-fetch");
+let sum = 0;
 // Local Imports.
 const config = require("./config");
+
+const sessions = require("./cowinapi");
 
 // Making a Twit object for connecting to the API.
 const T = new Twit(config);
 
 // Setting up a user stream
-const stream = T.stream("statuses/filter", { track: "@YourSlots" });
+const stream = T.stream("statuses/filter", {
+  track: "@YourSlots",
+});
 
 // Listening to Stream.
 stream.on("tweet", tweetEvent);
@@ -36,20 +41,43 @@ function tweetEvent(tweet) {
 
   console.log(isValid);
 
-  // Id for replying in thread.
-  let id = tweet.id_str;
-
   if (reply_to === "YourSlots" && isValid) {
     // Get data from SETU API & send that as tweet.
-    var newTweet = "@" + from + " thankyou for tweeting me!";
+    const api_url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${pinCode}&date=28-05-2021`;
 
-    // Post Tweet.
-    postTweet(newTweet, id);
+    fetch(api_url, {
+      headers: { "User-Agent": "Mozilla/5.0" },
+    })
+      .then((response) => {
+        if (response.ok) {
+          response.json().then((data) => {
+            data.sessions.forEach((element) => {
+              sum = sum + element.available_capacity_dose1;
+            });
+            if (data.sessions.length === 0 || sum === 0) {
+              let newTweet =
+                "@" + from + " Sorry ! No slots available in your pincode.";
+
+              // Post Tweet.
+              postTweet(newTweet, tweet.id_str);
+            } else {
+              let newTweet =
+                "@" + from + " There are " + sum + " slots available";
+
+              // Post Tweet.
+              postTweet(newTweet, tweet.id_str);
+            }
+          });
+        } else {
+          throw "Something went wrong;";
+        }
+      })
+      .catch((e) => console.log(e));
   } else if (reply_to === "YourSlots" && !isValid) {
-    var newTweet = "@" + from + " Your pincode looks invalid!";
+    let newTweet = "@" + from + " Your pincode looks invalid!";
 
     // Post Tweet.
-    postTweet(newTweet, id);
+    postTweet(newTweet, tweet.id_str);
   }
 }
 

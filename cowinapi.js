@@ -1,14 +1,22 @@
 const fetch = require("node-fetch");
 
-function fetchData(pin_code, date) {
-  const api_url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${pin_code}&date=${date}`;
+function getData() {
+  const api_url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=180013&date=28-05-2021`;
+  let data;
 
   fetch(api_url, {
     headers: { "User-Agent": "Mozilla/5.0" },
   })
-    .then((res) => res.json())
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));
-}
+    .then((response) => {
+      if (response.ok) {
+        response.json().then((data) => {
+          data = data;
+        });
+      } else {
+        throw "Something went wrong;";
+      }
+    })
+    .catch((e) => console.log(e));
 
-export default fetchData;
+  return data;
+}
