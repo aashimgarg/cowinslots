@@ -50,20 +50,19 @@ function tweetEvent(tweet) {
     })
       .then((response) => {
         if (response.ok) {
-          response.json()
-      .then((data) => {
-           data.sessions.forEach(element => {
-             sum = sum+ element.available_capacity_dose1
-           })
-        if (data.sessions.length == 0) {
+          response.json().then((data) => {
+            data.sessions.forEach((element) => {
+              sum = sum + element.available_capacity_dose1;
+            });
+            if (data.sessions.length === 0 || sum === 0) {
               let newTweet =
                 "@" + from + " Sorry ! No slots available in your pincode.";
 
               // Post Tweet.
               postTweet(newTweet, tweet.id_str);
-            } else if(sum === 0){
+            } else {
               let newTweet =
-                "@" + from + " There are " + sum + "slots available";
+                "@" + from + " There are " + sum + " slots available";
 
               // Post Tweet.
               postTweet(newTweet, tweet.id_str);
