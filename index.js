@@ -1,7 +1,9 @@
 // Package Imports.
 const Twit = require("twit");
 const fetch = require("node-fetch");
-let sum = 0;
+let sum1 = 0;
+let sum2 = 0;
+
 // Local Imports.
 const config = require("./config");
 
@@ -56,9 +58,11 @@ function tweetEvent(tweet) {
         if (response.ok) {
           response.json().then((data) => {
             data.sessions.forEach((element) => {
-              sum = sum + element.available_capacity_dose1;
+              if(element.min_age_limit == 18)
+                sum1 = sum1 + element.available_capacity_dose1;
+                sum2 = sum2 + element.available_capacity_dose2;
             });
-            if (data.sessions.length === 0 || sum === 0) {
+            if (data.sessions.length === 0 || (sum1 === 0 && sum2 === 0)) {
               let newTweet =
                 "@" + from + " Sorry ! No slots available in your pincode.";
 
@@ -66,7 +70,7 @@ function tweetEvent(tweet) {
               postTweet(newTweet, tweet.id_str);
             } else {
               let newTweet =
-                "@" + from + " There are " + sum + " slots available";
+                "@" + from + " There are " + sum1 + " dose 1 slots available and " + sum2 + " dose 2 slots available";
 
               // Post Tweet.
               postTweet(newTweet, tweet.id_str);
