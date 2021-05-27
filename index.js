@@ -15,7 +15,7 @@ stream.on("tweet", tweetEvent);
 
 // Function when tweet event is trigerred.
 function tweetEvent(tweet) {
-  console.log(tweet);
+  console.log("Tweeted");
   // Who is this in reply to?
   let reply_to = tweet.in_reply_to_screen_name;
 
@@ -64,13 +64,13 @@ function postTweet(txt, id) {
   T.post("statuses/update", tweet, tweeted);
 
   // Function to make sure tweet was sent.
-  function tweeted(err, reply) {
+  const tweeted = (err, reply) => {
     if (err) {
       console.log(err);
     } else {
       console.log("Tweeted " + reply.text);
     }
-  }
+  };
 }
 
 // Function for validating pin code.
