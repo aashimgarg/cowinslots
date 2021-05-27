@@ -1,7 +1,7 @@
 // Package Imports.
 const Twit = require("twit");
 const fetch = require("node-fetch");
-
+let sum = 0;
 // Local Imports.
 const config = require("./config");
 
@@ -50,18 +50,23 @@ function tweetEvent(tweet) {
     })
       .then((response) => {
         if (response.ok) {
-          response.json().then((data) => {
-            console.log(data);
-            console.log(data.sessions.length);
-
-            if (data.sessions.length == 0) {
+          response.json()
+      .then((data) => {
+           data.sessions.forEach(element => {
+             sum = sum+ element.available_capacity_dose1
+           })
+        if (data.sessions.length == 0) {
               let newTweet =
                 "@" + from + " Sorry ! No slots available in your pincode.";
 
               // Post Tweet.
               postTweet(newTweet, tweet.id_str);
-            } else {
-              console.log("Do something");
+            } else if(sum === 0){
+              let newTweet =
+                "@" + from + " There are " + sum + "slots available";
+
+              // Post Tweet.
+              postTweet(newTweet, tweet.id_str);
             }
           });
         } else {
