@@ -14,7 +14,7 @@ const stream = T.stream("statuses/filter", { track: "@rainaarteev" });
 stream.on("tweet", tweetEvent);
 
 // Function when tweet event is trigerred.
-function tweetEvent(tweet) {
+const tweetEvent = (tweet) => {
   console.log("Tweeted");
   // Who is this in reply to?
   let reply_to = tweet.in_reply_to_screen_name;
@@ -36,7 +36,7 @@ function tweetEvent(tweet) {
 }
 
 // Function for Posting a tweet.
-function postTweet(txt, id) {
+const postTweet = (txt, id) =>  {
   var tweet = {
     status: txt,
     in_reply_to_status_id: id,
@@ -46,7 +46,7 @@ function postTweet(txt, id) {
   T.post("statuses/update", tweet, tweeted);
 
   // Function to make sure tweet was sent.
-  function tweeted(err, reply) {
+  const tweeted = (err, reply) => {
     if (err) {
       console.log(err);
     } else {
