@@ -1,17 +1,18 @@
 // Package Imports.
 const Twit = require("twit");
+const fetch = require("node-fetch");
 
 // Local Imports.
 const config = require("./config");
 
-const sessions = require("./cowinapi")
+const sessions = require("./cowinapi");
 
 // Making a Twit object for connecting to the API.
 const T = new Twit(config);
 
 // Setting up a user stream
-const stream = T.stream("statuses/filter", { 
-  track: "@YourSlots" 
+const stream = T.stream("statuses/filter", {
+  track: "@YourSlots",
 });
 
 // Listening to Stream.
@@ -45,14 +46,33 @@ function tweetEvent(tweet) {
 
   if (reply_to === "YourSlots" && isValid) {
     // Get data from SETU API & send that as tweet.
-    sessions(pinCode,28-05-2021);
+    const api_url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${pinCode}&date=28-05-2021`;
 
-    var newTweet = "@" + from + " thankyou for tweeting me!";
+    fetch(api_url, {
+      headers: { "User-Agent": "Mozilla/5.0" },
+    })
+      .then((response) => {
+        if (response.ok) {
+          response.json().then((data) => {
+            console.log(data);
+            console.log(data.sessions.length);
 
-    // Post Tweet.
-    postTweet(newTweet, id);
+            if (data.sessions.length == 0) {
+              let newTweet = "Sorry ! No slots available in your pincode.";
+
+              // Post Tweet.
+              postTweet(newTweet, id);
+            } else {
+              console.log("Do something");
+            }
+          });
+        } else {
+          throw "Something went wrong;";
+        }
+      })
+      .catch((e) => console.log(e));
   } else if (reply_to === "YourSlots" && !isValid) {
-    var newTweet = "@" + from + " Your pincode looks invalid!";
+    let newTweet = "@" + from + " Your pincode looks invalid!";
 
     // Post Tweet.
     postTweet(newTweet, id);
