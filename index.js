@@ -15,7 +15,7 @@ stream.on("tweet", tweetEvent);
 
 // Function when tweet event is trigerred.
 function tweetEvent(tweet) {
-  console.log("Tweeted");
+  console.log(tweet);
   // Who is this in reply to?
   let reply_to = tweet.in_reply_to_screen_name;
 
@@ -26,11 +26,29 @@ function tweetEvent(tweet) {
   // Text of the tweet.
   let text = tweet.text;
 
+  // Extract pin code from the text.
+  let pinCode = text.replace(/\D/g, "");
+
+  console.log(pinCode);
+
+  // Check if pin code is valid or not.
+  let isValid = validatePinCode(pinCode);
+
+  console.log(isValid);
+
   // Id for replying in thread.
   let id = tweet.id_str;
 
-  if (reply_to === "RainaArteev") {
+  if (reply_to === "RainaArteev" && isValid) {
+    // Get data from SETU API & send that as tweet.
     var newTweet = "@" + from + " thankyou for tweeting me!";
+
+    // Post Tweet.
+    postTweet(newTweet, id);
+  } else if (reply_to === "RainaArteev" && !isValid) {
+    var newTweet = "@" + from + " Your pincode looks invalid!";
+
+    // Post Tweet.
     postTweet(newTweet, id);
   }
 }
@@ -53,4 +71,12 @@ function postTweet(txt, id) {
       console.log("Tweeted " + reply.text);
     }
   }
+}
+
+// Function for validating pin code.
+function validatePinCode(pinCode) {
+  let regex = new RegExp("^[1-9]{1}[0-9]{2}\\s{0,1}[0-9]{3}$");
+
+  let isValid = regex.test(pinCode);
+  return isValid;
 }
