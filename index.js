@@ -41,9 +41,6 @@ function tweetEvent(tweet) {
 
   console.log(isValid);
 
-  // Id for replying in thread.
-  let id = tweet.id_str;
-
   if (reply_to === "YourSlots" && isValid) {
     // Get data from SETU API & send that as tweet.
     const api_url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${pinCode}&date=28-05-2021`;
@@ -58,10 +55,11 @@ function tweetEvent(tweet) {
             console.log(data.sessions.length);
 
             if (data.sessions.length == 0) {
-              let newTweet = "Sorry ! No slots available in your pincode.";
+              let newTweet =
+                "@" + from + " Sorry ! No slots available in your pincode.";
 
               // Post Tweet.
-              postTweet(newTweet, id);
+              postTweet(newTweet, tweet.id_str);
             } else {
               console.log("Do something");
             }
@@ -75,7 +73,7 @@ function tweetEvent(tweet) {
     let newTweet = "@" + from + " Your pincode looks invalid!";
 
     // Post Tweet.
-    postTweet(newTweet, id);
+    postTweet(newTweet, tweet.id_str);
   }
 }
 
