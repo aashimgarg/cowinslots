@@ -4,11 +4,15 @@ const Twit = require("twit");
 // Local Imports.
 const config = require("./config");
 
+const sessions = require("./cowinapi")
+
 // Making a Twit object for connecting to the API.
 const T = new Twit(config);
 
 // Setting up a user stream
-const stream = T.stream("statuses/filter", { track: "@YourSlots" });
+const stream = T.stream("statuses/filter", { 
+  track: "@YourSlots" 
+});
 
 // Listening to Stream.
 stream.on("tweet", tweetEvent);
@@ -41,6 +45,8 @@ function tweetEvent(tweet) {
 
   if (reply_to === "YourSlots" && isValid) {
     // Get data from SETU API & send that as tweet.
+    sessions(pinCode,28-05-2021);
+
     var newTweet = "@" + from + " thankyou for tweeting me!";
 
     // Post Tweet.

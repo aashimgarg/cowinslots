@@ -11,4 +11,4 @@ function fetchData(pin_code, date) {
     .catch((err) => console.log(err));
 }
 
-export default fetchData;
+module.exports = fetchData;
