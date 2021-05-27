@@ -4,6 +4,9 @@ const fetch = require("node-fetch");
 let sum1 = 0;
 let sum2 = 0;
 
+let sum3 = 0;
+let sum4 = 0;
+
 // Local Imports.
 const config = require("./config");
 
@@ -58,11 +61,18 @@ function tweetEvent(tweet) {
         if (response.ok) {
           response.json().then((data) => {
             data.sessions.forEach((element) => {
-              if(element.min_age_limit == 18)
+              if (element.min_age_limit == 18) {
                 sum1 = sum1 + element.available_capacity_dose1;
                 sum2 = sum2 + element.available_capacity_dose2;
+              } else {
+                sum3 = sum3 + element.available_capacity_dose1;
+                sum4 = sum4 + element.available_capacity_dose2;
+              }
             });
-            if (data.sessions.length === 0 || (sum1 === 0 && sum2 === 0)) {
+            if (
+              data.sessions.length === 0 ||
+              (sum1 === 0 && sum2 === 0 && sum3 === 0 && sum4 === 0)
+            ) {
               let newTweet =
                 "@" + from + " Sorry ! No slots available in your pincode.";
 
@@ -70,7 +80,17 @@ function tweetEvent(tweet) {
               postTweet(newTweet, tweet.id_str);
             } else {
               let newTweet =
-                "@" + from + " There are " + sum1 + " dose 1 slots available and " + sum2 + " dose 2 slots available";
+                "@" +
+                from +
+                " There are " +
+                sum1 +
+                " dose-one slots available and " +
+                sum2 +
+                " dose-two slots available for 18 to 44 yrs.\n There are " +
+                sum3 +
+                " dose-one slots available and " +
+                sum4 +
+                " dose-two slots available for 45 yrs & above.";
 
               // Post Tweet.
               postTweet(newTweet, tweet.id_str);
