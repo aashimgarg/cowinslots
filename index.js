@@ -1,11 +1,6 @@
 // Package Imports.
 const Twit = require("twit");
 const fetch = require("node-fetch");
-let sum1 = 0;
-let sum2 = 0;
-
-let sum3 = 0;
-let sum4 = 0;
 
 // Local Imports.
 const config = require("./config");
@@ -25,6 +20,11 @@ stream.on("tweet", tweetEvent);
 
 // Function when tweet event is trigerred.
 function tweetEvent(tweet) {
+  let sum1 = 0;
+  let sum2 = 0;
+
+  let sum3 = 0;
+  let sum4 = 0;
   console.log("Tweeted");
   // Who is this in reply to?
   let reply_to = tweet.in_reply_to_screen_name;
