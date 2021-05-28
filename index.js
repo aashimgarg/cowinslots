@@ -94,7 +94,8 @@ function tweetEvent(tweet) {
             }
           });
         } else {
-          throw "Something went wrong;";
+          console.log(response);
+          console.log(response.err);
         }
       })
       .catch((e) => console.log(e));
