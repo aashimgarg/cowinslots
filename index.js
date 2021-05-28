@@ -25,7 +25,6 @@ function tweetEvent(tweet) {
 
   let sum3 = 0;
   let sum4 = 0;
-  console.log("Tweeted");
   // Who is this in reply to?
   let reply_to = tweet.in_reply_to_screen_name;
 
@@ -54,9 +53,7 @@ function tweetEvent(tweet) {
     // Get data from SETU API & send that as tweet.
     const api_url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${pinCode}&date=${date}`;
 
-    fetch(api_url, {
-      headers: { "User-Agent": "Mozilla/5.0" },
-    })
+    fetch(api_url)
       .then((response) => {
         if (response.ok) {
           response.json().then((data) => {
